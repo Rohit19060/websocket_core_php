@@ -26,32 +26,35 @@
         <hr>
         <div class="row">
             <div class="col-md-4">
-                <?php 
-					session_start();
-					if(!isset($_SESSION['user'])) {
-						header("location: index.php");
-					}
-					require("db/users.php");
-					require("db/chatrooms.php");
+                <?php
+session_start();
+if (!isset($_SESSION['user'])) {
+    header("location: index.php");
+}
+use users;
+use chatrooms;
 
-					$objChatroom = new chatrooms;
-					$chatrooms   = $objChatroom->getAllChatRooms();
+// require "db/users.php";
+// require "db/chatrooms.php";
 
-					$objUser = new users;
-					$users   = $objUser->getAllUsers();
-				 ?>
+$objChatroom = new chatrooms;
+$chatrooms = $objChatroom->getAllChatRooms();
+
+$objUser = new users;
+$users = $objUser->getAllUsers();
+?>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <td>
-                                <?php 
-									foreach ($_SESSION['user'] as $key => $user) {
-										$userId = $key;
-										echo '<input type="hidden" name="userId" id="userId" value="'.$key.'">';
-										echo "<div>".$user['name']."</div>";
-										echo "<div>".$user['email']."</div>";
-									}
-								 ?>
+                                <?php
+foreach ($_SESSION['user'] as $key => $user) {
+    $userId = $key;
+    echo '<input type="hidden" name="userId" id="userId" value="' . $key . '">';
+    echo "<div>" . $user['name'] . "</div>";
+    echo "<div>" . $user['email'] . "</div>";
+}
+?>
                             </td>
                             <td align="right" colspan="2">
                                 <input type="button" class="btn btn-warning" id="leave-chat" name="leave-chat"
@@ -63,19 +66,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-							foreach ($users as $key => $user) {
-								$color = 'color: red';
-								if($user['login_status'] == 1) {
-									$color = 'color: green';
-								}
-								if(!isset($_SESSION['user'][$user['id']])) {
-								echo "<tr><td>".$user['name']."</td>";
-								echo "<td><span class='glyphicon glyphicon-globe' style='".$color."'></span></td>";
-								echo "<td>".$user['last_login']."</td></tr>";
-								}
-							}
-						 ?>
+                        <?php
+foreach ($users as $key => $user) {
+    $color = 'color: red';
+    if ($user['login_status'] == 1) {
+        $color = 'color: green';
+    }
+    if (!isset($_SESSION['user'][$user['id']])) {
+        echo "<tr><td>" . $user['name'] . "</td>";
+        echo "<td><span class='glyphicon glyphicon-globe' style='" . $color . "'></span></td>";
+        echo "<td>" . $user['last_login'] . "</td></tr>";
+    }
+}
+?>
                     </tbody>
                 </table>
             </div>
@@ -88,17 +91,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php 
-					  		foreach ($chatrooms as $key => $chatroom) {
+                            <?php
+foreach ($chatrooms as $key => $chatroom) {
 
-					  			if($userId == $chatroom['userid']) {
-					  				$from = "Me";
-					  			} else {
-					  				$from = $chatroom['name'];
-					  			}
-					  			echo '<tr><td valign="top"><div><strong>'.$from.'</strong></div><div>'.$chatroom['msg'].'</div><td align="right" valign="top">'.date("d/m/Y h:i:s A", strtotime($chatroom['created_on'])).'</td></tr>';
-					  		}
-					  	 ?>
+    if ($userId == $chatroom['userid']) {
+        $from = "Me";
+    } else {
+        $from = $chatroom['name'];
+    }
+    echo '<tr><td valign="top"><div><strong>' . $from . '</strong></div><div>' . $chatroom['msg'] . '</div><td align="right" valign="top">' . date("d/m/Y h:i:s A", strtotime($chatroom['created_on'])) . '</td></tr>';
+}
+?>
                         </tbody>
                     </table>
                 </div>
